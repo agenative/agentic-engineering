@@ -7,5 +7,6 @@ SOURCE_DIR="~/Documents/Github/agentic-engineering/.claude/skills"
 DESTINATION_DIR=".claude/skills"
 
 
-# Create a symbolic link 
-ln -s $SOURCE_DIR/$SKILL_NAME $DESTINATION_DIR/$SKILL_NAME
+# Create a symbolic link
+mkdir -p $DESTINATION_DIR
+ln -s ~/Documents/Github/agentic-engineering/.claude/skills/$SKILL_NAME $DESTINATION_DIR/$SKILL_NAME
