@@ -1,30 +1,43 @@
 ---
 name: design-a-feature
 description: >-
-  Design a feature through research then detailed design (RESEARCH.md → DESIGN.md)
-  until implementation-ready. Use when the user wants to design-a-feature, work out
-  a design from initial thoughts, produce RESEARCH.md and DESIGN.md, or iterate a
-  design spec before coding.
+  Design a feature in two gated stages: thorough research (RESEARCH.md) with
+  user review before any design work, then detailed design (DESIGN.md) until
+  implementation-ready. Use when the user wants to design-a-feature, work out
+  a design from initial thoughts, produce RESEARCH.md and DESIGN.md, or iterate
+  a design spec before coding.
 ---
 
 # Design a feature
 
-Turn initial feature thoughts into an **implementation-ready** `DESIGN.md` via a
-disciplined **research stage** then **design stage**. Prefer monorepo primary
-sources and existing practices over invention.
+Turn initial feature thoughts into an **implementation-ready** `DESIGN.md` via
+two **gated** stages: **research** (must clear user review) then **design**.
+Prefer monorepo primary sources and existing practices over invention.
 
-**Leading words:** *research stage*, *design stage*, *second thought*, *implementation-ready*.
+**Leading words:** *research stage*, *research gate*, *design stage*, *second thought*, *implementation-ready*.
 
 ## Outputs
 
 | Artifact | When | Role |
 | --- | --- | --- |
 | `RESEARCH.md` | Research stage | Findings, citations, outstanding questions, high-level design |
-| `DESIGN.md` | Design stage | Implementation contract; source of truth once written |
+| `DESIGN.md` | Design stage (only after research gate) | Implementation contract; source of truth once written |
 
 Default location: next to the feature module (e.g. `<project>/…/<feature>/RESEARCH.md` and `DESIGN.md`). Match repo convention if one exists; otherwise choose a sensible path and say where.
 
 Do **not** implement production code in this skill unless the user explicitly asks after `DESIGN.md` is implementation-ready.
+
+## Stage gate (mandatory)
+
+Work is split into two stages. **Do not start the design stage or write `DESIGN.md` until the user explicitly accepts `RESEARCH.md`.**
+
+1. Complete research → write/update `RESEARCH.md`.
+2. **Stop and ask** whether `RESEARCH.md` is satisfactory to proceed to design.
+3. If not: revise `RESEARCH.md` from the user's instructions, then ask again.
+4. Repeat until the user confirms they are satisfied with `RESEARCH.md`.
+5. Only then begin the design stage and produce `DESIGN.md`.
+
+Never draft `DESIGN.md` "in parallel," as a preview, or from assumed approval.
 
 ## Steps
 
@@ -60,15 +73,23 @@ Create or overwrite the research note. Required shape: load [`document-templates
 
 **Done when:** `RESEARCH.md` exists at the chosen path, cites sources for major claims, states outstanding questions explicitly, and contains the required diagram(s).
 
-### 4. Iterate the research stage
+### 4. Research gate — user review (hard stop)
 
-Keep updating `RESEARCH.md` until research is information-complete for design.
+After `RESEARCH.md` is written or updated, **stop**. Do not begin design.
 
-- Resolve outstanding questions via more legwork, user answers, or locked defaults with rationale.
-- Fold clarifications into `RESEARCH.md` (do not leave decisions only in chat).
-- Stop inventing detail that belongs in `DESIGN.md`; keep research at high-level design + evidence.
+- Present the path to `RESEARCH.md` and a brief summary of what research covered (and what remains open).
+- Ask explicitly whether `RESEARCH.md` is satisfactory to proceed to the design stage / `DESIGN.md`.
+- Wait for the user's answer. Do not assume approval from silence or from "looks good so far" unless they clearly approve proceeding to design.
 
-**Done when:** no blocking unknowns remain for a detailed design (open items are either answered, deferred with rationale, or locked as explicit defaults), and `RESEARCH.md` reflects that state.
+**If the user is not satisfied:**
+
+- Follow their instructions to enhance or correct `RESEARCH.md` (more legwork, sharper findings, resolved questions, diagram fixes, etc.).
+- Fold all changes into `RESEARCH.md` (do not leave decisions only in chat).
+- Return to this gate and ask again.
+
+**If the user is satisfied:** proceed to step 5.
+
+**Done when:** the user has explicitly confirmed that `RESEARCH.md` is satisfactory to proceed to design.
 
 ### 5. Design stage — write `DESIGN.md`
 
@@ -119,5 +140,6 @@ Repeat steps 6–7 until the design clears the gate.
 - Primary sources over secondary summaries; cite paths for monorepo claims.
 - Prefer borrow-from-existing over invent-from-scratch when a fit exists.
 - Keep `RESEARCH.md` as evidence + high-level design; keep `DESIGN.md` as the implementation contract.
+- **Never write or draft `DESIGN.md` until the user explicitly accepts `RESEARCH.md` at the research gate.**
 - After every material `DESIGN.md` update, run the **second thought** step before declaring progress complete.
 - Required diagrams for the final design: **context** (module relationships) and **sequence** (end-to-end interaction). Add others only when they earn their keep.
