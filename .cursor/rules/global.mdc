@@ -1,0 +1,10 @@
+---
+description: Mak's global agent instructions across all scenarios
+alwaysApply: true
+---
+
+# Mak's agent instructions across all scenarios
+
+## General Guidelines
+- When making technical decisions, do not give much weight to development cost. Always prefer quality, simplicity, consistency, robustness, scalability, security and long term maintainability.
+- Apply high standard to engineering excellence: lint, test failures, and test flakiness.
