@@ -1,0 +1,11 @@
+---
+description: Prioritize SonarQube over Copilot review comments
+alwaysApply: true
+---
+
+# Review feedback priority
+
+When addressing PR review feedback:
+
+1. **SonarQube / SonarCloud takes highest priority.** Fix Quality Gate failures and Sonar issues (reliability, security, bugs, hotspots that fail the gate) before anything else.
+2. **Copilot review comments can be ignored** unless they independently match a Sonar finding or an obvious correctness bug you would fix anyway.
