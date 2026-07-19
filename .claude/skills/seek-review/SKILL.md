@@ -1,0 +1,122 @@
+---
+name: seek-review
+description: >-
+  Render a Markdown document as interactive review HTML (index, Mermaid,
+  comments, inputs, choices), collect submitted feedback, then fold it back.
+  Use when the user wants seek-review, or to turn RESEARCH.md / DESIGN.md /
+  other Markdown into a review HTML before revising.
+---
+
+# Seek review
+
+Turn Markdown that needs comment into a **review HTML**, open it in a browser, wait for **Submit review**, then fold the **feedback file** into the source.
+
+**Leading words:** *seek-review*, *review HTML*, *chat bubble*, *submit review*, *feedback file*, *loyalty to structure*.
+
+## Outputs
+
+| Artifact | Role |
+| --- | --- |
+| `<stem>.review.html` | Interactive review beside the source |
+| `<stem>.review.feedback.<UTC>-<hex>.json` | One submission (unique; never overwrite prior) |
+
+Place both next to the source. The HTML is a review surface — do not invent a second document structure.
+
+## Steps
+
+### 1. Confirm the document
+
+- Use the path the user named, or the single obvious target from recent conversation.
+- If uncertain, **stop and confirm** (offer likely candidates). Do not guess.
+
+**Done when:** one source path is explicit.
+
+### 2. Load the source
+
+Read the Markdown. Inventory headings, Mermaid fences, tables, and questions/decisions. Classify controls with the heuristics table below; every commentable/interactive block needs a short **original quote** for `data-quote`.
+
+**Done when:** index sections, Mermaid blocks, control types, and quotes are known.
+
+### 3. Fix Mermaid for the browser
+
+Apply [mermaid-compat.md](mermaid-compat.md). Prefer fixing both review HTML and source Markdown for clear syntax bugs. Do not change diagram meaning.
+
+**Done when:** each diagram has a browser-safe definition.
+
+### 4. Render the review HTML
+
+Write `<stem>.review.html` beside the source (unless the user names another path).
+
+Embed config (`source`, `feedbackFileBase`, `submitUrl`) per [html-contract.md](html-contract.md).
+
+**Loyalty to structure:** keep source order, headings, and meaning; enhance with controls — do not reshuffle.
+
+**Chrome:** mimic [`reference/mindbridge-look-and-feel.html`](reference/mindbridge-look-and-feel.html); follow [html-contract.md](html-contract.md). Fix Mermaid syntax via [mermaid-compat.md](mermaid-compat.md). Persist drafts in `localStorage` keyed by source path.
+
+**Done when:** HTML matches the reference patterns, Mermaid renders cleanly, Submit is form-anchored.
+
+### 5. Open in browser (background) and wait for feedback
+
+```bash
+python <skill>/scripts/serve_review.py \
+  --html <abs-path-to-stem.review.html> \
+  --out  <abs-path-to-stem.review.feedback.json> \
+  --port <free-port>
+```
+
+- `<skill>` = this skill directory. `--out` is a **base name**; each submit writes `<stem>.review.feedback.<UTC-YYYYMMDD-HHMMSSZ>.<8hex>.json`.
+- Start in a **background terminal**. Wait for `FEEDBACK_WRITTEN=<unique-path>`; read **that** file.
+- If the server cannot start: open HTML directly; still save feedback under a unique timestamped name beside the source.
+
+**Done when:** the new feedback file exists and has been read.
+
+### 6. Fold feedback back
+
+Apply `items` (via `original_quote` / `anchor`) to the source Markdown. Re-run seek-review if another pass is needed. Confirm changes and ask whether to continue.
+
+**Done when:** source reflects accepted feedback (or discards are explicit).
+
+## Control detection heuristics
+
+| Source signal | Control |
+| --- | --- |
+| Open question / notes / describe / bare `?` | Textarea |
+| Resolved default / A vs B vs C | Radio (pre-select stated default) |
+| Select all that apply / independent flags | Checkboxes |
+| Prose, diagram, table row | Chat bubble only |
+
+Default to **radio** when unsure between radio and checkbox.
+
+## Feedback JSON shape
+
+Self-contained: every `items[]` entry includes `original_quote`. Kinds: `comment` | `decision` | `freeform` | `multiselect`.
+
+```json
+{
+  "source": "/path/Document.md",
+  "review_html": "/path/Document.review.html",
+  "feedback_file": "/path/Document.review.feedback.20260719-024812Z.a1b2c3d4.json",
+  "feedback_base": "/path/Document.review.feedback.json",
+  "exported_at": "ISO-8601",
+  "reviewer": "",
+  "verdict": "approve | approve_with_edits | request_changes | null",
+  "items": [
+    {
+      "kind": "comment",
+      "anchor": "brief",
+      "section": "1. Brief",
+      "original_quote": "verbatim excerpt…",
+      "feedback": "user text"
+    }
+  ]
+}
+```
+
+Omit empty freeform. Keep `items` as the primary reading path.
+
+## Additional resources
+
+- Visual SSOT: [reference/mindbridge-look-and-feel.html](reference/mindbridge-look-and-feel.html)
+- UI contract: [html-contract.md](html-contract.md)
+- Mermaid syntax: [mermaid-compat.md](mermaid-compat.md)
+- Review server: [scripts/serve_review.py](scripts/serve_review.py)

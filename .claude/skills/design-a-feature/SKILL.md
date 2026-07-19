@@ -2,10 +2,10 @@
 name: design-a-feature
 description: >-
   Design a feature in two gated stages: thorough research (RESEARCH.md) with
-  user review before any design work, then detailed design (DESIGN.md) until
-  implementation-ready. Use when the user wants to design-a-feature, work out
-  a design from initial thoughts, produce RESEARCH.md and DESIGN.md, or iterate
-  a design spec before coding.
+  seek-review HTML user review before any design work, then detailed design
+  (DESIGN.md) until implementation-ready. Use when the user wants to
+  design-a-feature, work out a design from initial thoughts, produce RESEARCH.md
+  and DESIGN.md, or iterate a design spec before coding.
 ---
 
 # Design a feature
@@ -14,13 +14,15 @@ Turn initial feature thoughts into an **implementation-ready** `DESIGN.md` via
 two **gated** stages: **research** (must clear user review) then **design**.
 Prefer monorepo primary sources and existing practices over invention.
 
-**Leading words:** *research stage*, *research gate*, *design stage*, *second thought*, *implementation-ready*.
+**Leading words:** *research stage*, *research gate*, *seek-review*, *design stage*, *second thought*, *implementation-ready*.
 
 ## Outputs
 
 | Artifact | When | Role |
 | --- | --- | --- |
 | `RESEARCH.md` | Research stage | Findings, citations, outstanding questions, high-level design |
+| `RESEARCH.review.html` | Research gate | Interactive seek-review of `RESEARCH.md` |
+| `RESEARCH.review.feedback.<UTC>-<hex>.json` | Research gate | One seek-review submission (unique file; agent reads the path from `FEEDBACK_WRITTEN=`) |
 | `DESIGN.md` | Design stage (only after research gate) | Implementation contract; source of truth once written |
 
 Default location: next to the feature module (e.g. `<project>/…/<feature>/RESEARCH.md` and `DESIGN.md`). Match repo convention if one exists; otherwise choose a sensible path and say where.
@@ -32,9 +34,9 @@ Do **not** implement production code in this skill unless the user explicitly as
 Work is split into two stages. **Do not start the design stage or write `DESIGN.md` until the user explicitly accepts `RESEARCH.md`.**
 
 1. Complete research → write/update `RESEARCH.md`.
-2. **Stop and ask** whether `RESEARCH.md` is satisfactory to proceed to design.
-3. If not: revise `RESEARCH.md` from the user's instructions, then ask again.
-4. Repeat until the user confirms they are satisfied with `RESEARCH.md`.
+2. **Seek-review** via browser (background server); wait for a unique `RESEARCH.review.feedback.<UTC>-<hex>.json` / verdict.
+3. If not approved: fold feedback into `RESEARCH.md`, re-run seek-review, and gate again.
+4. Repeat until the user explicitly accepts `RESEARCH.md` (approve / approve-with-edits after edits are folded).
 5. Only then begin the design stage and produce `DESIGN.md`.
 
 Never draft `DESIGN.md` "in parallel," as a preview, or from assumed approval.
@@ -73,23 +75,23 @@ Create or overwrite the research note. Required shape: load [`document-templates
 
 **Done when:** `RESEARCH.md` exists at the chosen path, cites sources for major claims, states outstanding questions explicitly, and contains the required diagram(s).
 
-### 4. Research gate — user review (hard stop)
+### 4. Research gate — seek-review (hard stop)
 
-After `RESEARCH.md` is written or updated, **stop**. Do not begin design.
+After `RESEARCH.md` is written or updated, run the [`seek-review`](../seek-review/SKILL.md) skill on it. Do not begin design.
 
-- Present the path to `RESEARCH.md` and a brief summary of what research covered (and what remains open).
-- Ask explicitly whether `RESEARCH.md` is satisfactory to proceed to the design stage / `DESIGN.md`.
-- Wait for the user's answer. Do not assume approval from silence or from "looks good so far" unless they clearly approve proceeding to design.
+1. Follow **seek-review** end-to-end: fix Mermaid for the browser, render `RESEARCH.review.html`, start the review server in a **background terminal**, open the browser, and invite the user to pin comments, answer choices, and click **Submit review**.
+2. Briefly summarize in chat what research covered (and what remains open), pointing at `RESEARCH.md`, `RESEARCH.review.html`, and that feedback will land in a **new** unique `RESEARCH.review.feedback.<UTC>-<hex>.json`.
+3. **Wait** until the server prints `FEEDBACK_WRITTEN=<unique-path>` (read that file) or the user gives an explicit verdict in chat. Do not assume approval from silence or from "looks good so far." Do not reuse an older feedback file.
 
-**If the user is not satisfied:**
+**Verdict handling:**
 
-- Follow their instructions to enhance or correct `RESEARCH.md` (more legwork, sharper findings, resolved questions, diagram fixes, etc.).
-- Fold all changes into `RESEARCH.md` (do not leave decisions only in chat).
-- Return to this gate and ask again.
+- **Request changes** (or equivalent dissatisfaction): fold pinned comments, decision overrides, and freeform notes into `RESEARCH.md` (more legwork, sharper findings, resolved questions, diagram fixes as needed). Do not leave decisions only in chat. Re-run seek-review on the updated `RESEARCH.md`, then return to this gate.
+- **Approve with edits**: fold the submitted feedback into `RESEARCH.md` first; re-run seek-review only if the user wants another pass. Then proceed to step 5.
+- **Approve**: proceed to step 5.
 
-**If the user is satisfied:** proceed to step 5.
+Chat-only approval without the review HTML is acceptable only if the user explicitly declines seek-review for this gate; otherwise seek-review is the default review surface.
 
-**Done when:** the user has explicitly confirmed that `RESEARCH.md` is satisfactory to proceed to design.
+**Done when:** the user has explicitly accepted `RESEARCH.md` as satisfactory to proceed to design (via seek-review verdict or explicit chat acceptance after any required edits are folded).
 
 ### 5. Design stage — write `DESIGN.md`
 
@@ -140,6 +142,6 @@ Repeat steps 6–7 until the design clears the gate.
 - Primary sources over secondary summaries; cite paths for monorepo claims.
 - Prefer borrow-from-existing over invent-from-scratch when a fit exists.
 - Keep `RESEARCH.md` as evidence + high-level design; keep `DESIGN.md` as the implementation contract.
-- **Never write or draft `DESIGN.md` until the user explicitly accepts `RESEARCH.md` at the research gate.**
+- **Never write or draft `DESIGN.md` until the user explicitly accepts `RESEARCH.md` at the research gate** (default surface: seek-review `RESEARCH.review.html`).
 - After every material `DESIGN.md` update, run the **second thought** step before declaring progress complete.
 - Required diagrams for the final design: **context** (module relationships) and **sequence** (end-to-end interaction). Add others only when they earn their keep.
