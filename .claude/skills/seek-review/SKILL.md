@@ -47,13 +47,15 @@ Apply [mermaid-compat.md](mermaid-compat.md) to the source Markdown for clear sy
 
 **Always regenerate** `<stem>.review.html` from the current Markdown on every seek-review run — never reuse an existing review HTML.
 
+After writing it, run `python <skill>/scripts/assert_review_html.py <abs-path-to-stem.review.html>` and fix any failures before serving.
+
 Write `<stem>.review.html` beside the source (unless the user names another path).
 
 Embed config (`source`, `feedbackFileBase`, `submitUrl`) per [html-contract.md](html-contract.md).
 
 **Loyalty to structure:** keep source order, headings, and meaning; enhance with controls — do not reshuffle.
 
-**Chrome:** mimic [`reference/mindbridge-look-and-feel.html`](reference/mindbridge-look-and-feel.html); follow [html-contract.md](html-contract.md). Fix Mermaid syntax via [mermaid-compat.md](mermaid-compat.md). Persist drafts in `localStorage` keyed by source path.
+**Chrome:** copy patterns from [`reference/mindbridge-look-and-feel.html`](reference/mindbridge-look-and-feel.html) (diagram-card `header`/`data-dz`, chat-bubble SVG in `.comment-btn`, HTML `<table>` for Markdown tables). Follow [html-contract.md](html-contract.md). Fix Mermaid via [mermaid-compat.md](mermaid-compat.md) before embedding. Persist drafts in `localStorage` keyed by source path.
 
 **Done when:** HTML matches the reference patterns, Mermaid renders cleanly, Submit is form-anchored.
 
@@ -122,3 +124,4 @@ Omit empty freeform. Keep `items` as the primary reading path.
 - UI contract: [html-contract.md](html-contract.md)
 - Mermaid syntax: [mermaid-compat.md](mermaid-compat.md)
 - Review server: [scripts/serve_review.py](scripts/serve_review.py)
+- HTML assert: [scripts/assert_review_html.py](scripts/assert_review_html.py)

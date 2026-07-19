@@ -40,6 +40,12 @@ Server allocates a unique `feedback_file` per submit from `feedbackFileBase`.
 
 Preserve heading order/nesting, tables (every column/cell, including Priority), lists, and callouts. Mermaid stays in place with zoom tools (below).
 
+**Markdown tables → HTML `<table>`** (thead/tbody, every cell). Never dump pipe tables into `<pre>` — that is not a review surface.
+
+**Diagram cards:** copy the reference markup exactly — `diagram-card` → `header` → `.meta` → `.diagram-tools` with `data-dz` (`out`/`in`/`reset`/`modal`) → `.diagram-viewport` + `script.mermaid-source`. Do not invent `data-act` or place tools outside `header .meta`.
+
+**Comment buttons:** each `.comment-btn` must include the chat-bubble `<svg>` in the markup (circular button alone is a failure).
+
 ## Comments
 
 - Always-visible upright **chat-bubble** icon (upper-right); pad so it never covers prose. No “+ Comment” text label; no rotated map-pin.
