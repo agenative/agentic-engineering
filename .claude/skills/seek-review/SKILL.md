@@ -39,11 +39,13 @@ Read the Markdown. Inventory headings, Mermaid fences, tables, and questions/dec
 
 ### 3. Fix Mermaid for the browser
 
-Apply [mermaid-compat.md](mermaid-compat.md). Prefer fixing both review HTML and source Markdown for clear syntax bugs. Do not change diagram meaning.
+Apply [mermaid-compat.md](mermaid-compat.md) to the source Markdown for clear syntax bugs (the fresh render in step 4 will pick them up). Do not change diagram meaning.
 
 **Done when:** each diagram has a browser-safe definition.
 
 ### 4. Render the review HTML
+
+**Always regenerate** `<stem>.review.html` from the current Markdown on every seek-review run — never reuse an existing review HTML.
 
 Write `<stem>.review.html` beside the source (unless the user names another path).
 
