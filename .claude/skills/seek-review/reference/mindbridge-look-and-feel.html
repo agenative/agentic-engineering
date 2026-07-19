@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>seek-review look-and-feel reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <style>
+    :root, html[data-theme="light"] {
+      --canvas: #f7f8f9;
+      --surface: #ffffff;
+      --surface-2: #eef2f6;
+      --sidebar: #e8eef4;
+      --ink: #1d2327;
+      --ink-soft: #3f4047;
+      --muted: #575760;
+      --line: #d8dee6;
+      --line-strong: #b8c2ce;
+      --primary: #0056a2;
+      --primary-hover: #004683;
+      --primary-soft: #e8f3fb;
+      --teal: #00a56a;
+      --teal-soft: #e6f7ef;
+      --warn-soft: #fff6e5;
+      --danger: #c62828;
+      --risk-high: #c62828;
+      --risk-med: #c99200;
+      --risk-low: #1f7a4c;
+      --shadow: 0 1px 2px rgba(29,35,39,.04), 0 8px 24px rgba(29,35,39,.06);
+      --focus: #2fa1d3;
+      --topbar-h: 56px;
+      --sidebar-w: 232px;
+      --modal-bg: rgba(255,255,255,.82);
+      --backdrop: rgba(14,20,27,.28);
+    }
+    html[data-theme="dark"] {
+      --canvas: #0e141b;
+      --surface: #172029;
+      --surface-2: #1c2631;
+      --sidebar: #121920;
+      --ink: #e8eef4;
+      --ink-soft: #c5d0db;
+      --muted: #9aa6b2;
+      --line: #2a3542;
+      --line-strong: #3a4756;
+      --primary: #2fa1d3;
+      --primary-hover: #4bb4e0;
+      --primary-soft: #143246;
+      --teal: #3dd68c;
+      --teal-soft: #143528;
+      --warn-soft: #3a2f12;
+      --danger: #ff6b6b;
+      --risk-high: #ff6b6b;
+      --risk-med: #ffc533;
+      --risk-low: #3dd68c;
+      --shadow: 0 1px 2px rgba(0,0,0,.35), 0 12px 28px rgba(0,0,0,.35);
+      --focus: #7bdcb5;
+      --modal-bg: rgba(23,32,41,.84);
+      --backdrop: rgba(0,0,0,.45);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "DM Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--canvas);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+    code, .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 0.86em; }
+    button, .btn {
+      font: inherit; cursor: pointer; border-radius: 6px;
+      border: 1px solid transparent; padding: 0.45rem 0.8rem;
+    }
+    .btn-primary { background: var(--primary); color: #fff; font-weight: 600; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-secondary { background: var(--surface); border-color: var(--line-strong); color: var(--ink); }
+    .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-ghost { background: transparent; color: var(--ink-soft); }
+    .btn-ghost:hover { background: var(--primary-soft); color: var(--primary); }
+
+    .icon-bubble {
+      width: 16px; height: 16px; display: block;
+    }
+
+    .topbar {
+      position: sticky; top: 0; z-index: 40; height: var(--topbar-h);
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 0 1rem 0 0; background: var(--surface); border-bottom: 1px solid var(--line);
+    }
+    .brand {
+      display: flex; align-items: center; gap: 0.75rem; min-width: var(--sidebar-w);
+      padding: 0 1rem; height: 100%; border-right: 1px solid var(--line); background: var(--sidebar);
+    }
+    .mark {
+      width: 28px; height: 28px; border-radius: 6px;
+      background: linear-gradient(135deg, #0056a2, #00d084);
+      display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 0.75rem;
+    }
+    .brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+    .brand-text strong { font-size: 0.92rem; }
+    .brand-text span { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .crumbs { display: flex; align-items: center; gap: 0.4rem; font-size: 0.88rem; color: var(--muted); flex: 1; min-width: 0; }
+    .crumbs b { color: var(--ink); font-weight: 600; }
+    .crumbs .sep { opacity: 0.5; }
+    .top-actions { display: flex; gap: 0.35rem; align-items: center; flex-wrap: wrap; }
+    .chip {
+      font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 999px;
+      border: 1px solid var(--line); background: var(--surface-2); color: var(--ink-soft);
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { position: static !important; height: auto !important; border-right: none; border-bottom: 1px solid var(--line); }
+      .brand { min-width: auto; border-right: none; }
+    }
+
+    .sidebar {
+      position: sticky; top: var(--topbar-h); height: calc(100vh - var(--topbar-h));
+      overflow: auto; background: var(--sidebar); border-right: 1px solid var(--line);
+      padding: 1rem 0.75rem;
+    }
+    .sidebar h2 {
+      margin: 0 0 0.65rem 0.4rem; font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--muted); font-weight: 600;
+    }
+    .sidebar a {
+      display: block; text-decoration: none; color: var(--ink-soft); font-size: 0.9rem;
+      padding: 0.45rem 0.6rem; border-radius: 6px; margin-bottom: 0.15rem;
+    }
+    .sidebar a:hover { background: var(--surface); color: var(--primary); }
+    .sidebar a.active {
+      background: var(--surface); color: var(--primary);
+      box-shadow: inset 3px 0 0 var(--primary); font-weight: 600;
+    }
+
+    /* Form column: FAB stays inside this box */
+    .form-column {
+      position: relative;
+      max-width: 920px;
+      width: 100%;
+      padding: 1.25rem 1.5rem 1.5rem;
+    }
+
+    .banner {
+      background: var(--primary-soft);
+      border: 1px solid color-mix(in srgb, var(--primary) 25%, var(--line));
+      border-radius: 8px; padding: 0.9rem 1rem; margin-bottom: 1.1rem;
+      color: var(--ink-soft); font-size: 0.92rem;
+    }
+    .banner strong { color: var(--primary); }
+
+    .panel {
+      background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+      padding: 1.15rem 1.25rem 1.25rem; margin-bottom: 1rem; box-shadow: var(--shadow);
+    }
+    .panel h2 { margin: 0 0 0.35rem; font-size: 1.2rem; letter-spacing: -0.01em; }
+    .panel .lede { margin: 0 0 1rem; color: var(--muted); font-size: 0.92rem; }
+
+    .commentable {
+      position: relative;
+      padding-right: 2.1rem; /* room for always-visible bubble — never covers prose */
+    }
+    .comment-btn {
+      position: absolute;
+      top: 0.15rem;
+      right: 0.1rem;
+      z-index: 3;
+      width: 28px; height: 28px;
+      padding: 0;
+      display: grid; place-items: center;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+    .comment-btn:hover { background: var(--primary-soft); border-color: var(--primary); }
+    .comment-btn.has-comment {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .comment-btn svg { width: 15px; height: 15px; display: block; }
+
+    .finding {
+      border-left: 3px solid var(--primary); background: var(--surface-2);
+      border-radius: 0 6px 6px 0; padding: 0.7rem 0.85rem; margin: 0.65rem 0;
+    }
+    .finding h3 { margin: 0 0 0.25rem; font-size: 0.98rem; }
+    .finding p { margin: 0.2rem 0; }
+    .cite { font-size: 0.82rem; color: var(--muted); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td {
+      text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--line); vertical-align: top;
+    }
+    th {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em;
+      color: var(--muted); background: var(--surface-2);
+    }
+
+    .diagram-card {
+      border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface-2);
+    }
+    .diagram-card header {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
+      padding: 0.55rem 0.75rem 0.55rem 0.9rem; border-bottom: 1px solid var(--line); background: var(--surface);
+    }
+    .diagram-card header h3 { margin: 0; font-size: 0.92rem; }
+    .diagram-card header .meta { display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap; }
+    .diagram-card header .meta span { font-size: 0.75rem; color: var(--muted); }
+    .diagram-tools {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      background: var(--surface-2); border: 1px solid var(--line); border-radius: 6px; padding: 0.15rem;
+    }
+    .diagram-tools button {
+      width: 28px; height: 28px; padding: 0; display: grid; place-items: center;
+      border-radius: 4px; border: none; background: transparent; color: var(--ink);
+      font-weight: 700; font-size: 1rem; line-height: 1;
+    }
+    .diagram-tools button:hover { background: var(--primary-soft); color: var(--primary); }
+    .diagram-tools .zoom-btn {
+      width: auto; padding: 0 0.5rem; font-size: 0.75rem; font-weight: 600;
+    }
+    /* Diagrams always render in light mode, even when the page is dark */
+    .diagram-viewport,
+    .zoom-modal .zoom-body {
+      --diagram-canvas: #ffffff;
+      --diagram-ink: #1d2327;
+      color-scheme: light;
+    }
+    .diagram-viewport {
+      position: relative;
+      min-height: 160px;
+      height: auto;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid #d8dee6;
+      cursor: grab;
+      touch-action: none;
+    }
+    .diagram-viewport:active { cursor: grabbing; }
+    .diagram-viewport.panning { cursor: grabbing; }
+    .diagram-canvas {
+      transform-origin: 0 0;
+      will-change: transform;
+      padding: 1rem;
+      display: inline-block;
+      min-width: 100%;
+    }
+    .diagram-canvas .mermaid,
+    .diagram-canvas svg { display: block; max-width: none !important; }
+    .diagram-note { margin: 0; padding: 0 0.9rem 0.9rem; font-size: 0.85rem; color: var(--muted); }
+    .mermaid-source { display: none !important; }
+
+    .decision {
+      border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem; margin: 0.75rem 0; background: var(--surface-2);
+    }
+    .decision .q { font-weight: 600; margin-bottom: 0.25rem; }
+    .decision .hint { font-size: 0.85rem; color: var(--muted); margin: 0 0 0.65rem; }
+    .default-badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--primary); background: var(--primary-soft);
+      padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.35rem; vertical-align: middle;
+    }
+    .choices { display: flex; flex-direction: column; gap: 0.4rem; }
+    .choice {
+      display: grid; grid-template-columns: auto 1fr; gap: 0.55rem; align-items: start;
+      padding: 0.55rem 0.7rem; border: 1px solid var(--line); border-radius: 6px;
+      background: var(--surface); cursor: pointer;
+    }
+    .choice:hover { border-color: var(--line-strong); }
+    .choice:has(input:checked) { border-color: var(--primary); background: var(--primary-soft); }
+    .choice input { margin-top: 0.2rem; accent-color: var(--primary); }
+    .choice .label { font-weight: 500; }
+    .choice .desc { display: block; font-size: 0.84rem; color: var(--muted); font-weight: 400; margin-top: 0.12rem; }
+
+    label.field {
+      display: flex; flex-direction: column; gap: 0.35rem;
+      margin-top: 0.75rem; font-size: 0.9rem; font-weight: 500;
+    }
+    input[type="text"], textarea {
+      font: inherit; padding: 0.55rem 0.7rem; border: 1px solid var(--line-strong);
+      border-radius: 6px; background: var(--surface); color: var(--ink); width: 100%;
+    }
+    textarea { min-height: 100px; resize: vertical; }
+    input:focus, textarea:focus, button:focus-visible {
+      outline: 2px solid var(--focus); outline-offset: 1px;
+    }
+
+    /* Sticky FAB docked to form column — not viewport edge / not below form */
+    .fab-dock {
+      position: sticky;
+      bottom: 1.25rem;
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.25rem;
+      z-index: 30;
+      pointer-events: none;
+    }
+    .fab-dock .btn-primary {
+      pointer-events: auto;
+      box-shadow: var(--shadow);
+      padding: 0.7rem 1.1rem;
+    }
+
+    .json-preview {
+      display: none; margin-top: 1rem; border: 1px solid var(--line); border-radius: 8px;
+      background: var(--canvas); overflow: hidden;
+    }
+    .json-preview.show { display: block; }
+    .json-preview header {
+      padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--line);
+      font-size: 0.82rem; font-weight: 600; color: var(--primary); background: var(--primary-soft);
+    }
+    .json-preview pre {
+      margin: 0; padding: 0.85rem; overflow: auto; max-height: 280px;
+      font-family: "IBM Plex Mono", monospace; font-size: 0.75rem; line-height: 1.45;
+    }
+
+
+
+    /* Comments list drawer */
+    .comments-drawer {
+      position: fixed; top: 0; right: 0; width: min(380px, 100vw);
+      height: 100vh; background: var(--surface); border-left: 1px solid var(--line);
+      box-shadow: -8px 0 28px rgba(0,0,0,.14); z-index: 65;
+      transform: translateX(105%); transition: transform .2s ease;
+      display: flex; flex-direction: column;
+    }
+    .comments-drawer.open { transform: translateX(0); }
+    .comments-drawer header {
+      padding: 0.9rem 1rem; border-bottom: 1px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;
+    }
+    .comments-drawer header h2 { margin: 0; font-size: 1.05rem; }
+    .comments-drawer .body { padding: 0.85rem; overflow: auto; flex: 1; }
+    .comment-card {
+      border: 1px solid var(--line); border-radius: 8px; padding: 0.75rem;
+      margin-bottom: 0.55rem; background: var(--primary-soft);
+    }
+    .comment-card .anchor { font-size: 0.75rem; color: var(--primary); font-weight: 600; margin-bottom: 0.3rem; }
+    .comment-card .quote { font-size: 0.78rem; color: var(--muted); margin: 0 0 0.45rem; font-style: italic; }
+    .comment-card .text { margin: 0 0 0.55rem; white-space: pre-wrap; font-size: 0.92rem; }
+    .comment-card .row { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+
+    /* Semi-transparent comment modal */
+    .backdrop {
+      position: fixed; inset: 0; background: var(--backdrop); z-index: 55;
+      opacity: 0; pointer-events: none; transition: opacity .2s;
+    }
+    .backdrop.open { opacity: 1; pointer-events: auto; }
+    .modal {
+      position: fixed; inset: 0; z-index: 70; display: none; place-items: center; padding: 1rem;
+    }
+    .modal.open { display: grid; }
+    .modal .card {
+      width: min(440px, 100%);
+      background: var(--modal-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 1.1rem;
+    }
+    .modal h3 { margin: 0 0 0.25rem; }
+    .modal .target { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.7rem; }
+    .modal .actions { display: flex; justify-content: flex-end; gap: 0.45rem; margin-top: 0.8rem; }
+
+    /* Diagram zoom modal */
+    .zoom-modal .card {
+      width: min(960px, 96vw);
+      max-height: 90vh;
+      display: flex; flex-direction: column;
+      background: var(--modal-bg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .zoom-modal .zoom-toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .zoom-modal .zoom-body {
+      position: relative;
+      flex: 1;
+      min-height: 60vh;
+      overflow: hidden;
+      border: 1px solid #d8dee6;
+      border-radius: 8px;
+      background: #ffffff;
+      cursor: grab;
+      touch-action: none;
+    }
+    .zoom-modal .zoom-body:active,
+    .zoom-modal .zoom-body.panning { cursor: grabbing; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark" aria-hidden="true">MB</div>
+      <div class="brand-text">
+        <strong>MindBridge</strong>
+        <span>seek-review reference</span>
+      </div>
+    </div>
+    <div class="crumbs">
+      <span>Organizations</span><span class="sep">/</span>
+      <span>Engagements</span><span class="sep">/</span>
+      <b>Sample review</b>
+    </div>
+    <div class="top-actions">
+      <button type="button" class="btn-ghost" id="themeLight">Light</button>
+      <button type="button" class="btn-ghost" id="themeDark">Dark</button>
+      <button type="button" class="btn-secondary" id="openComments">Comments (0)</button>
+    </div>
+  </header>
+
+  <div class="shell">
+    <nav class="sidebar" aria-label="Section index" id="toc">
+      <h2>On this page</h2>
+      <a href="#intro">Intro</a>
+      <a href="#prose">Comment on prose</a>
+      <a href="#diagram">Diagram + zoom</a>
+      <a href="#sequence">Sequence diagram</a>
+      <a href="#table">Priority table</a>
+      <a href="#open">Open-ended</a>
+      <a href="#radio">Single choice</a>
+      <a href="#multi">Multiselect</a>
+      <a href="#verdict">Verdict</a>
+      <a href="#submit-zone">Submit preview</a>
+    </nav>
+
+    <div class="form-column" id="formColumn">
+      <div class="banner" id="intro">
+        <strong>Reference sample.</strong>
+        Patterns every seek-review HTML must follow: chat-bubble comments, Comments drawer listing all pins, Mermaid zoom, form-anchored Submit, faithful tables, fixed TOC highlight.
+      </div>
+
+      <section class="panel" id="prose">
+        <h2>1. Comment — prose</h2>
+        <p class="lede">Always-visible chat bubble (upper right). Opens a semi-transparent modal. Save to confirm; re-open to edit.</p>
+        <article class="finding commentable" data-anchor="finding-pipeline" data-quote="discovery_node only treats sources as channels today." data-section="1. Comment — prose">
+          <button type="button" class="comment-btn" data-pin="finding-pipeline" aria-label="Comment" title="Comment"></button>
+          <h3>Exploration pipeline</h3>
+          <p><code>discovery_node</code> only treats sources as channels today (fetch ≤48 → RAG → top 12). Downstream already understands watch URLs.</p>
+          <p class="cite">Source: <span class="mono">backend/graph.py</span></p>
+        </article>
+      </section>
+
+      <section class="panel" id="diagram">
+        <h2>2. Mermaid — flowchart + zoom</h2>
+        <p class="lede">Drag to pan; <strong>+</strong> / <strong>−</strong> to zoom; <strong>Zoom</strong> opens a large workspace (same tools).</p>
+        <div class="diagram-card commentable" data-anchor="diagram-context" data-quote="TopicDetail UI → FastAPI → discovery_node → scrape/filter/summarize" data-section="2. Mermaid flowchart">
+          <button type="button" class="comment-btn" data-pin="diagram-context" aria-label="Comment" title="Comment"></button>
+          <header>
+            <h3>System context</h3>
+            <div class="meta">
+              <span>Who talks to whom</span>
+              <div class="diagram-tools" data-tools-for="diagram-context">
+                <button type="button" data-dz="out" title="Zoom out" aria-label="Zoom out">−</button>
+                <button type="button" data-dz="in" title="Zoom in" aria-label="Zoom in">+</button>
+                <button type="button" data-dz="reset" title="Reset" aria-label="Reset view">⟲</button>
+                <button type="button" class="zoom-btn" data-dz="modal" title="Open large view">Zoom</button>
+              </div>
+            </div>
+          </header>
+          <div class="diagram-viewport" id="viewport-diagram-context" data-diagram="diagram-context"></div>
+          <script type="text/plain" class="mermaid-source" id="src-diagram-context">flowchart LR
+  TopicPage["TopicDetail UI"] -->|POST adhoc| API["FastAPI"]
+  API --> Job["adhoc job"]
+  Job --> Disco["discovery_node"]
+  Disco --> Pipe["scrape to summarize"]</script>
+          <p class="diagram-note">Diagrams stay light-themed. Viewport grows to full diagram height. Drag to pan; + / − to zoom.</p>
+        </div>
+      </section>
+
+      <section class="panel" id="sequence">
+        <h2>3. Mermaid — sequence (compat-safe)</h2>
+        <p class="lede">Avoid <code>/</code> and <code>;</code> in message text; avoid reserved participant ids.</p>
+        <div class="diagram-card commentable" data-anchor="diagram-sequence" data-quote="Trigger digest job → query entries → send or skip → advance watermark" data-section="3. Mermaid sequence">
+          <button type="button" class="comment-btn" data-pin="diagram-sequence" aria-label="Comment" title="Comment"></button>
+          <header>
+            <h3>Runtime sequence</h3>
+            <div class="meta">
+              <span>End-to-end</span>
+              <div class="diagram-tools" data-tools-for="diagram-sequence">
+                <button type="button" data-dz="out" title="Zoom out" aria-label="Zoom out">−</button>
+                <button type="button" data-dz="in" title="Zoom in" aria-label="Zoom in">+</button>
+                <button type="button" data-dz="reset" title="Reset" aria-label="Reset view">⟲</button>
+                <button type="button" class="zoom-btn" data-dz="modal" title="Open large view">Zoom</button>
+              </div>
+            </div>
+          </header>
+          <div class="diagram-viewport" id="viewport-diagram-sequence" data-diagram="diagram-sequence"></div>
+          <script type="text/plain" class="mermaid-source" id="src-diagram-sequence">sequenceDiagram
+  participant Sched as Scheduler
+  participant Work as DigestWorker
+  participant Store as AnalysisStore
+  participant IAM as RBAC
+  participant Mail as OutboundMail
+  participant Recipient as User
+
+  Sched->>Work: Trigger digest job for engagement
+  Work->>Store: Query new high or medium entries since watermark
+  Store-->>Work: Entry list and scores
+  Work->>IAM: List users with Analyze access
+  IAM-->>Work: Recipient set
+  alt no new risk items
+    Work->>Work: Skip send and advance watermark
+  else has items
+    Work->>Mail: Send digest email
+    Work->>Recipient: Write in-app inbox copy
+    Work->>Store: Advance watermark
+  end</script>
+          <p class="diagram-note">Safe sequence pattern (see mermaid-compat.md). Drag to pan; + / − to zoom.</p>
+        </div>
+      </section>
+
+      <section class="panel" id="table">
+        <h2>4. Priority table (faithful columns)</h2>
+        <p class="lede">Render every source column and cell — including Priority values.</p>
+        <div class="commentable" data-anchor="fr-table" data-quote="FR-1 enable/disable digest — Priority Must" data-section="4. Priority table">
+          <button type="button" class="comment-btn" data-pin="fr-table" aria-label="Comment" title="Comment"></button>
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Requirement</th><th>Priority</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>FR-1</td><td>Users with Analyze access can enable/disable digest per engagement</td><td>Must</td></tr>
+              <tr><td>FR-2</td><td>Default cadence is weekly (Monday 08:00 firm-default timezone)</td><td>Must</td></tr>
+              <tr><td>FR-5</td><td>If zero new items, do not send email; still advance watermark</td><td>Should</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel" id="open">
+        <h2>5. Open-ended</h2>
+        <div class="commentable" data-anchor="open-notes" data-quote="Scope notes or missing goals" data-section="5. Open-ended">
+          <button type="button" class="comment-btn" data-pin="open-notes" aria-label="Comment" title="Comment"></button>
+          <label class="field">
+            Scope notes or missing goals
+            <textarea name="brief_notes" data-field="brief_notes" data-quote="Scope notes or missing goals" placeholder="Anything missing from goals / non-goals?"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="panel" id="radio">
+        <h2>6. Single-choice</h2>
+        <div class="decision commentable" data-anchor="d-api" data-quote="API shape — Dedicated POST run-adhoc" data-section="6. Single-choice">
+          <button type="button" class="comment-btn" data-pin="d-api" aria-label="Comment" title="Comment"></button>
+          <div class="q">API shape <span class="default-badge">Research default</span></div>
+          <p class="hint">Mutually exclusive alternatives.</p>
+          <div class="choices" data-decision="api">
+            <label class="choice">
+              <input type="radio" name="api" value="dedicated" checked />
+              <span><span class="label">Dedicated <span class="mono">POST …/run-adhoc</span></span><span class="desc">Keeps channel runs unchanged.</span></span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="api" value="extend_run" />
+              <span><span class="label">Extend <span class="mono">POST …/run</span></span><span class="desc">Fewer endpoints; mixed semantics.</span></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="multi">
+        <h2>7. Multiselect</h2>
+        <div class="decision commentable" data-anchor="q-urlforms" data-quote="Which watch URL forms must work in v1?" data-section="7. Multiselect">
+          <button type="button" class="comment-btn" data-pin="q-urlforms" aria-label="Comment" title="Comment"></button>
+          <div class="q">Which watch URL forms must work in v1?</div>
+          <p class="hint">Select all that apply.</p>
+          <div class="choices">
+            <label class="choice"><input type="checkbox" name="urlforms" value="watch" checked /><span><span class="label">youtube.com/watch?v=…</span></span></label>
+            <label class="choice"><input type="checkbox" name="urlforms" value="youtu_be" checked /><span><span class="label">youtu.be/…</span></span></label>
+            <label class="choice"><input type="checkbox" name="urlforms" value="shorts" /><span><span class="label">youtube.com/shorts/…</span></span></label>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="verdict">
+        <h2>8. Verdict</h2>
+        <div class="decision" data-anchor="verdict" data-quote="Research gate verdict" data-section="8. Verdict">
+          <div class="q">Verdict</div>
+          <div class="choices" data-decision="verdict">
+            <label class="choice"><input type="radio" name="verdict" value="approve" /><span><span class="label">Approve</span><span class="desc">Proceed.</span></span></label>
+            <label class="choice"><input type="radio" name="verdict" value="approve_with_edits" /><span><span class="label">Approve with edits</span><span class="desc">Fold feedback, then proceed.</span></span></label>
+            <label class="choice"><input type="radio" name="verdict" value="request_changes" /><span><span class="label">Request changes</span><span class="desc">Revise and seek-review again.</span></span></label>
+          </div>
+        </div>
+        <label class="field">Reviewer name
+          <input type="text" name="reviewer" placeholder="Your name" />
+        </label>
+      </section>
+
+      <section class="panel" id="submit-zone">
+        <h2>9. Submit preview</h2>
+        <p class="lede">Submit review (docked to this form column) builds self-contained JSON with original quotes.</p>
+        <div class="json-preview" id="jsonPreview">
+          <header>Self-contained feedback JSON</header>
+          <pre id="jsonText"></pre>
+        </div>
+      </section>
+
+      <div class="fab-dock">
+        <button type="button" class="btn-primary" id="submitBtn">Submit review</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="backdrop" id="backdrop" hidden></div>
+
+
+  <aside class="comments-drawer" id="commentsDrawer" aria-hidden="true">
+    <header>
+      <h2>All comments</h2>
+      <button type="button" class="btn-ghost" id="closeCommentsDrawer">Close</button>
+    </header>
+    <div class="body" id="commentsList"></div>
+  </aside>
+
+  <div class="modal" id="commentModal" aria-hidden="true">
+    <div class="card">
+      <h3 id="commentModalTitle">Add comment</h3>
+      <div class="target" id="commentTarget"></div>
+      <label class="field">Comment
+        <textarea id="commentText" placeholder="Type your feedback…"></textarea>
+      </label>
+      <div class="actions">
+        <button type="button" class="btn-ghost" id="commentCancel">Cancel</button>
+        <button type="button" class="btn-primary" id="commentSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal zoom-modal" id="zoomModal" aria-hidden="true">
+    <div class="card">
+      <div class="zoom-toolbar">
+        <h3 style="margin:0;">Diagram zoom</h3>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <div class="diagram-tools" id="zoomModalTools">
+            <button type="button" data-dz="out" title="Zoom out" aria-label="Zoom out">−</button>
+            <button type="button" data-dz="in" title="Zoom in" aria-label="Zoom in">+</button>
+            <button type="button" data-dz="reset" title="Reset" aria-label="Reset view">⟲</button>
+          </div>
+          <button type="button" class="btn-ghost" id="zoomClose">Close</button>
+        </div>
+      </div>
+      <div class="zoom-body" id="zoomBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const BUBBLE_SVG = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 3h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H8.4L4 21.5V5a2 2 0 0 1 2-2z"/></svg>`;
+
+    /** @type {Record<string, {anchor:string,text:string,original_quote:string,section:string,created_at:string,updated_at?:string}>} */
+    const commentsByAnchor = {};
+    let pendingAnchor = null;
+    let tocLockUntil = 0;
+
+    function setTheme(mode) {
+      const next = mode === "dark" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", next);
+      localStorage.setItem("seek-review-ref-theme", next);
+    }
+    document.getElementById("themeLight").onclick = () => setTheme("light");
+    document.getElementById("themeDark").onclick = () => setTheme("dark");
+    setTheme(localStorage.getItem("seek-review-ref-theme") || "light");
+
+    // Diagrams stay light-mode regardless of page theme
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "base",
+      securityLevel: "loose",
+      themeVariables: {
+        darkMode: false,
+        background: "#ffffff",
+        primaryColor: "#e8f3fb",
+        primaryTextColor: "#1d2327",
+        primaryBorderColor: "#0056a2",
+        secondaryColor: "#f7f8f9",
+        tertiaryColor: "#ffffff",
+        lineColor: "#575760",
+        textColor: "#1d2327",
+        mainBkg: "#e8f3fb",
+        nodeBorder: "#0056a2",
+        clusterBkg: "#f7f8f9",
+        titleColor: "#1d2327",
+        actorBkg: "#e8f3fb",
+        actorBorder: "#0056a2",
+        actorTextColor: "#1d2327",
+        actorLineColor: "#575760",
+        signalColor: "#1d2327",
+        signalTextColor: "#1d2327",
+        labelBoxBkgColor: "#ffffff",
+        labelBoxBorderColor: "#0056a2",
+        labelTextColor: "#1d2327",
+        loopTextColor: "#1d2327",
+        noteBkgColor: "#fff6e5",
+        noteTextColor: "#1d2327",
+        noteBorderColor: "#c99200",
+        fontFamily: "DM Sans, sans-serif",
+      },
+    });
+
+    /** Pan/zoom controller for a viewport element */
+    function fitViewportToCanvas(viewport, canvas, scale) {
+      const svg = canvas.querySelector("svg");
+      let contentH = 0;
+      let contentW = 0;
+      if (svg) {
+        try {
+          const bbox = svg.getBBox();
+          contentH = bbox.height;
+          contentW = bbox.width;
+        } catch (_) {
+          contentH = svg.getBoundingClientRect().height;
+          contentW = svg.getBoundingClientRect().width;
+        }
+        // Prefer explicit svg size when present
+        const attrH = parseFloat(svg.getAttribute("height"));
+        const attrW = parseFloat(svg.getAttribute("width"));
+        if (!Number.isNaN(attrH) && attrH > contentH) contentH = attrH;
+        if (!Number.isNaN(attrW) && attrW > contentW) contentW = attrW;
+      } else {
+        contentH = canvas.scrollHeight;
+        contentW = canvas.scrollWidth;
+      }
+      const padY = 32;
+      const padX = 48;
+      const needed = Math.ceil(contentH * scale + padY);
+      // Grow box to show full diagram length; cap only extreme cases
+      const maxH = Math.max(window.innerHeight * 0.85, 480);
+      viewport.style.height = Math.max(160, Math.min(needed, maxH)) + "px";
+      return { contentH, contentW };
+    }
+
+    function createDiagramViewer(viewport, { fit = true } = {}) {
+      const canvas = document.createElement("div");
+      canvas.className = "diagram-canvas";
+      viewport.innerHTML = "";
+      viewport.appendChild(canvas);
+      const state = { scale: 1, x: 16, y: 16, dragging: false, lastX: 0, lastY: 0 };
+      function apply() {
+        canvas.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        if (fit) fitViewportToCanvas(viewport, canvas, state.scale);
+      }
+      apply();
+      const api = {
+        canvas,
+        zoomBy(factor) {
+          state.scale = Math.min(4, Math.max(0.35, state.scale * factor));
+          apply();
+        },
+        reset() {
+          state.scale = 1; state.x = 16; state.y = 16; apply();
+        },
+        refit() { apply(); },
+      };
+      viewport.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0) return;
+        state.dragging = true;
+        state.lastX = e.clientX; state.lastY = e.clientY;
+        viewport.classList.add("panning");
+        viewport.setPointerCapture(e.pointerId);
+      });
+      viewport.addEventListener("pointermove", (e) => {
+        if (!state.dragging) return;
+        state.x += e.clientX - state.lastX;
+        state.y += e.clientY - state.lastY;
+        state.lastX = e.clientX; state.lastY = e.clientY;
+        apply();
+      });
+      const endDrag = (e) => {
+        state.dragging = false;
+        viewport.classList.remove("panning");
+        try { viewport.releasePointerCapture(e.pointerId); } catch (_) {}
+      };
+      viewport.addEventListener("pointerup", endDrag);
+      viewport.addEventListener("pointercancel", endDrag);
+      viewport.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        api.zoomBy(e.deltaY < 0 ? 1.1 : 1 / 1.1);
+      }, { passive: false });
+      return api;
+    }
+
+    const diagramViewers = {};
+
+    function getMermaidSource(diagramId) {
+      const el = document.getElementById(`src-${diagramId}`);
+      return el ? el.textContent.trim() : "";
+    }
+
+    async function renderSourceInto(viewer, source) {
+      const canvas = viewer.canvas;
+      canvas.innerHTML = "";
+      const pre = document.createElement("pre");
+      pre.className = "mermaid";
+      pre.textContent = source;
+      canvas.appendChild(pre);
+      try {
+        await mermaid.run({ nodes: [pre] });
+      } catch (err) {
+        canvas.innerHTML = `<div style="color:#c62828;padding:1rem;font-size:0.9rem;">Mermaid error: ${String(err.message || err)}</div><pre style="white-space:pre-wrap;font-size:0.75rem;padding:0 1rem 1rem;color:#1d2327;">${source.replace(/</g,"&lt;")}</pre>`;
+      }
+      // Allow layout to settle, then size viewport to full diagram length
+      requestAnimationFrame(() => viewer.refit());
+    }
+
+    async function mountInlineDiagram(diagramId) {
+      const viewport = document.getElementById(`viewport-${diagramId}`);
+      const source = getMermaidSource(diagramId);
+      if (!viewport || !source) return;
+      const viewer = createDiagramViewer(viewport, { fit: true });
+      diagramViewers[diagramId] = viewer;
+      await renderSourceInto(viewer, source);
+    }
+
+    async function renderAllDiagrams() {
+      const ids = [...document.querySelectorAll(".mermaid-source")].map((el) => el.id.replace(/^src-/, ""));
+      for (const id of ids) await mountInlineDiagram(id);
+    }
+
+    function bindTools(toolsRoot, getViewer) {
+      toolsRoot.querySelectorAll("[data-dz]").forEach((btn) => {
+        btn.addEventListener("click", async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const action = btn.getAttribute("data-dz");
+          if (action === "modal") {
+            const diagramId = toolsRoot.getAttribute("data-tools-for");
+            await openZoomModal(diagramId);
+            return;
+          }
+          const viewer = getViewer();
+          if (!viewer) return;
+          if (action === "in") viewer.zoomBy(1.2);
+          else if (action === "out") viewer.zoomBy(1 / 1.2);
+          else if (action === "reset") viewer.reset();
+        });
+      });
+    }
+
+    let modalViewer = null;
+    async function openZoomModal(diagramId) {
+      const source = getMermaidSource(diagramId);
+      if (!source) return;
+      const body = document.getElementById("zoomBody");
+      body.innerHTML = "";
+      // Modal body is already tall; still pan/zoom, but don't shrink the modal pane
+      modalViewer = createDiagramViewer(body, { fit: false });
+      body.style.height = "60vh";
+      document.getElementById("zoomModal").classList.add("open");
+      document.getElementById("zoomModal").setAttribute("aria-hidden", "false");
+      showBackdrop();
+      await renderSourceInto(modalViewer, source);
+      modalViewer.reset();
+    }
+
+    function closeZoomModal() {
+      document.getElementById("zoomModal").classList.remove("open");
+      document.getElementById("zoomModal").setAttribute("aria-hidden", "true");
+      document.getElementById("zoomBody").innerHTML = "";
+      modalViewer = null;
+      hideBackdropIfIdle();
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+    }
+
+    function paintCommentButtons() {
+      document.querySelectorAll(".comment-btn").forEach((btn) => {
+        btn.innerHTML = BUBBLE_SVG;
+        const anchor = btn.getAttribute("data-pin");
+        btn.classList.toggle("has-comment", Boolean(commentsByAnchor[anchor]));
+      });
+      const n = Object.keys(commentsByAnchor).length;
+      document.getElementById("openComments").textContent = `Comments (${n})`;
+      renderCommentsList();
+    }
+
+    function renderCommentsList() {
+      const list = document.getElementById("commentsList");
+      const entries = Object.values(commentsByAnchor);
+      if (!entries.length) {
+        list.innerHTML = `<p style="color:var(--muted);margin:0;">No comments yet. Click a chat bubble on any block.</p>`;
+        return;
+      }
+      list.innerHTML = entries.map((c, i) => `
+        <article class="comment-card" data-list-anchor="${escapeHtml(c.anchor)}">
+          <div class="anchor">#${i + 1} · ${escapeHtml(c.section || c.anchor)}</div>
+          ${c.original_quote ? `<p class="quote">“${escapeHtml(c.original_quote)}”</p>` : ""}
+          <p class="text">${escapeHtml(c.text)}</p>
+          <div class="row">
+            <button type="button" class="btn-secondary" data-jump="${escapeHtml(c.anchor)}">Jump</button>
+            <button type="button" class="btn-primary" data-edit="${escapeHtml(c.anchor)}">Edit</button>
+            <button type="button" class="btn-ghost" data-del="${escapeHtml(c.anchor)}">Delete</button>
+          </div>
+        </article>`).join("");
+      list.querySelectorAll("[data-jump]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const anchor = btn.getAttribute("data-jump");
+          closeCommentsDrawer();
+          const host = document.querySelector(`[data-anchor="${anchor}"]`);
+          if (host) host.scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+      });
+      list.querySelectorAll("[data-edit]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          closeCommentsDrawer();
+          openCommentModal(btn.getAttribute("data-edit"));
+        });
+      });
+      list.querySelectorAll("[data-del]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const anchor = btn.getAttribute("data-del");
+          delete commentsByAnchor[anchor];
+          paintCommentButtons();
+        });
+      });
+    }
+
+    function openCommentsDrawer() {
+      renderCommentsList();
+      document.getElementById("commentsDrawer").classList.add("open");
+      document.getElementById("commentsDrawer").setAttribute("aria-hidden", "false");
+      showBackdrop();
+    }
+
+    function closeCommentsDrawer() {
+      document.getElementById("commentsDrawer").classList.remove("open");
+      document.getElementById("commentsDrawer").setAttribute("aria-hidden", "true");
+      hideBackdropIfIdle();
+    }
+
+    function openCommentModal(anchor) {
+      pendingAnchor = anchor;
+      const host = document.querySelector(`[data-anchor="${anchor}"]`);
+      const existing = commentsByAnchor[anchor];
+      document.getElementById("commentModalTitle").textContent = existing ? "Edit comment" : "Add comment";
+      document.getElementById("commentTarget").textContent =
+        `On: ${anchor}` + (host?.dataset.quote ? ` — “${host.dataset.quote.slice(0, 100)}${host.dataset.quote.length > 100 ? "…" : ""}”` : "");
+      document.getElementById("commentText").value = existing?.text || "";
+      document.getElementById("commentModal").classList.add("open");
+      document.getElementById("commentModal").setAttribute("aria-hidden", "false");
+      showBackdrop();
+      document.getElementById("commentText").focus();
+    }
+
+    function closeCommentModal() {
+      pendingAnchor = null;
+      document.getElementById("commentModal").classList.remove("open");
+      document.getElementById("commentModal").setAttribute("aria-hidden", "true");
+      hideBackdropIfIdle();
+    }
+
+    function showBackdrop() {
+      const b = document.getElementById("backdrop");
+      b.hidden = false;
+      requestAnimationFrame(() => b.classList.add("open"));
+    }
+    function hideBackdropIfIdle() {
+      if (document.getElementById("commentModal").classList.contains("open")) return;
+      if (document.getElementById("zoomModal").classList.contains("open")) return;
+      if (document.getElementById("commentsDrawer").classList.contains("open")) return;
+      const b = document.getElementById("backdrop");
+      b.classList.remove("open");
+      setTimeout(() => { b.hidden = true; }, 200);
+    }
+
+    document.querySelectorAll(".comment-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        openCommentModal(btn.getAttribute("data-pin"));
+      });
+    });
+
+    document.getElementById("commentCancel").onclick = closeCommentModal;
+    document.getElementById("commentSave").onclick = () => {
+      const text = document.getElementById("commentText").value.trim();
+      if (!pendingAnchor) return;
+      if (!text) {
+        delete commentsByAnchor[pendingAnchor];
+      } else {
+        const host = document.querySelector(`[data-anchor="${pendingAnchor}"]`);
+        const prev = commentsByAnchor[pendingAnchor];
+        commentsByAnchor[pendingAnchor] = {
+          anchor: pendingAnchor,
+          text,
+          original_quote: host?.dataset.quote || "",
+          section: host?.dataset.section || "",
+          created_at: prev?.created_at || new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+      }
+      paintCommentButtons();
+      closeCommentModal();
+    };
+
+    document.getElementById("openComments").onclick = () => openCommentsDrawer();
+    document.getElementById("closeCommentsDrawer").onclick = () => closeCommentsDrawer();
+
+    // Diagram tools (inline + modal)
+    document.querySelectorAll(".diagram-tools[data-tools-for]").forEach((tools) => {
+      const id = tools.getAttribute("data-tools-for");
+      bindTools(tools, () => diagramViewers[id]);
+    });
+    bindTools(document.getElementById("zoomModalTools"), () => modalViewer);
+    document.getElementById("zoomClose").onclick = () => closeZoomModal();
+    document.getElementById("backdrop").onclick = () => {
+      closeCommentModal();
+      closeCommentsDrawer();
+      closeZoomModal();
+    };
+
+    // TOC: immediate highlight on click; observer does not fight clicks briefly
+    const tocLinks = [...document.querySelectorAll("#toc a")];
+    function setActiveToc(href) {
+      tocLinks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === href));
+    }
+    tocLinks.forEach((a) => {
+      a.addEventListener("click", () => {
+        setActiveToc(a.getAttribute("href"));
+        tocLockUntil = Date.now() + 800;
+      });
+    });
+    const sections = tocLinks.map((a) => document.querySelector(a.getAttribute("href"))).filter(Boolean);
+    const io = new IntersectionObserver((entries) => {
+      if (Date.now() < tocLockUntil) return;
+      const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (!visible.length) return;
+      setActiveToc(`#${visible[0].target.id}`);
+    }, { rootMargin: "-35% 0px -55% 0px", threshold: [0.01, 0.2, 0.5] });
+    sections.forEach((s) => io.observe(s));
+    setActiveToc("#intro");
+
+    document.getElementById("submitBtn").onclick = () => {
+      const items = Object.values(commentsByAnchor).map((c) => ({
+        kind: "comment",
+        anchor: c.anchor,
+        section: c.section,
+        original_quote: c.original_quote,
+        feedback: c.text,
+      }));
+      const api = document.querySelector('input[name="api"]:checked');
+      if (api) {
+        items.push({
+          kind: "decision",
+          anchor: "d-api",
+          section: "6. Single-choice",
+          original_quote: document.querySelector('[data-anchor="d-api"]')?.dataset.quote || "",
+          question: "API shape",
+          choice: api.value,
+          choice_label: api.parentElement.querySelector(".label")?.innerText?.trim() || api.value,
+          default: "dedicated",
+          overridden: api.value !== "dedicated",
+        });
+      }
+      const notes = document.querySelector('[name="brief_notes"]');
+      if (notes?.value.trim()) {
+        items.push({
+          kind: "freeform",
+          anchor: "open-notes",
+          section: "5. Open-ended",
+          original_quote: notes.dataset.quote || "",
+          field: "brief_notes",
+          feedback: notes.value.trim(),
+        });
+      }
+      items.push({
+        kind: "multiselect",
+        anchor: "q-urlforms",
+        section: "7. Multiselect",
+        original_quote: document.querySelector('[data-anchor="q-urlforms"]')?.dataset.quote || "",
+        field: "urlforms",
+        choices: [...document.querySelectorAll('input[name="urlforms"]:checked')].map((el) => el.value),
+      });
+      const verdict = document.querySelector('input[name="verdict"]:checked');
+      const payload = {
+        source: "reference sample",
+        review_html: "reference/mindbridge-look-and-feel.html",
+        feedback_file: "Document.review.feedback.<UTC>-<hex>.json",
+        exported_at: new Date().toISOString(),
+        reviewer: document.querySelector('[name="reviewer"]')?.value || "",
+        verdict: verdict ? verdict.value : null,
+        items,
+      };
+      document.getElementById("jsonText").textContent = JSON.stringify(payload, null, 2);
+      document.getElementById("jsonPreview").classList.add("show");
+      document.getElementById("submit-zone").scrollIntoView({ behavior: "smooth" });
+    };
+
+    paintCommentButtons();
+    renderAllDiagrams();
+  </script>
+</body>
+</html>
