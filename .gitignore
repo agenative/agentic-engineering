@@ -17,3 +17,10 @@
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Local editor noise
+nvim.log
