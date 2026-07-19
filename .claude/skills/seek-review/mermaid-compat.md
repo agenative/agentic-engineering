@@ -26,13 +26,16 @@ flowchart LR
 
 Quoted labels when display text is not a plain id. Subgraphs: `subgraph id [Title]` (id without spaces).
 
+Do **not** chain edges on one line (`A --> B --> C`); write one edge per line. Avoid `/`, `{`, `}`, and `→` inside node labels — rephrase (`scrape to filter`, not `scrape → filter`).
+
 ## sequenceDiagram
 
 | Problem | Fix |
 | --- | --- |
-| `/` or `;` in message text | Rephrase (`high or medium`) or split messages |
+| `/`, `;`, `{`, `}`, or `,` in message text | Rephrase in plain words (`POST run-adhoc with url body`, not `POST { url }`) |
+| Participant alias with spaces/hyphens that look like paths | CamelCase id + short alias (`RunAdhocAPI`, not `run-adhoc endpoint`) |
+| `actor User` / participant id `User` | Prefer `actor ActorUser` or `participant Recipient as User` |
 | Participant id is `end`/`alt`/`else`/`loop`/… | Rename id |
-| Participant id `User` confuses parser | `participant Recipient as User` |
 | Unbalanced `alt` / `else` / `end` | Match every `alt` with `end` |
 | Empty message after `:` | Always include text |
 
