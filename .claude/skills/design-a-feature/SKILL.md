@@ -79,7 +79,7 @@ Create or overwrite the research note. Required shape: load [`document-templates
 
 After `RESEARCH.md` is written or updated, run the [`seek-review`](../seek-review/SKILL.md) skill on it. Do not begin design.
 
-1. Follow **seek-review** end-to-end: fix Mermaid for the browser, render `RESEARCH.review.html`, start the review server in a **background terminal**, open the browser, and invite the user to pin comments, answer choices, and click **Submit review**.
+1. Follow **seek-review** end-to-end: fix Mermaid for the browser, render `RESEARCH.review.html`, start the review server in a **background terminal**, open the browser, and invite the user to leave chat-bubble comments, answer choices, and click **Submit review**.
 2. Briefly summarize in chat what research covered (and what remains open), pointing at `RESEARCH.md`, `RESEARCH.review.html`, and that feedback will land in a **new** unique `RESEARCH.review.feedback.<UTC>-<hex>.json`.
 3. **Wait** until the server prints `FEEDBACK_WRITTEN=<unique-path>` (read that file) or the user gives an explicit verdict in chat. Do not assume approval from silence or from "looks good so far." Do not reuse an older feedback file.
 

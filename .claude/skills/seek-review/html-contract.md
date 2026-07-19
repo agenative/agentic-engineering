@@ -85,3 +85,21 @@ On click, set `active` immediately (short lock so scroll-spy does not leave the 
 ```
 
 Sticky while scrolling; right edge of the **form column**; at the bottom of the form when the viewport is taller than the form. On submit: self-contained JSON (`items` + `original_quote`), on-page preview, POST to `submitUrl` (Copy/Download fallback).
+
+
+## Compliance checklist
+
+Run on the **freshly regenerated** `<stem>.review.html` before serving. Never reuse a prior review HTML; always rebuild from the current Markdown + [`reference/mindbridge-look-and-feel.html`](reference/mindbridge-look-and-feel.html).
+
+| Check | Pass signal |
+| --- | --- |
+| MindBridge tokens | `--primary: #0056a2` (light) / `#2fa1d3` (dark); `html[data-theme]` |
+| Typography | DM Sans + IBM Plex Mono only — **no** Fraunces / display serif |
+| Brand chrome | Topbar MindBridge mark; Light / Dark toggles (no System) |
+| Comments | Always-visible `.comment-btn` chat bubble — **no** `.pin-btn`, no “+ Comment” label |
+| Mermaid | `script.mermaid-source` store + light diagram viewport + pan/zoom/reset/Zoom modal |
+| Layout | Left index + `.form-column` + sticky `.fab-dock` Submit |
+| Config | `seek-review-config` / CFG with `source`, `reviewHtml`, `feedbackFileBase`, `submitUrl` |
+| Submit | POST to `submitUrl` with self-contained `items` + `original_quote` |
+
+Forbidden leftovers from older generators: `Fraunces`, `--accent: #0d6e6e`, `pin-btn`, rotated map-pins, invented gradients as the page theme.

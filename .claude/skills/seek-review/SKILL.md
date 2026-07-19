@@ -45,15 +45,22 @@ Apply [mermaid-compat.md](mermaid-compat.md). Prefer fixing both review HTML and
 
 ### 4. Render the review HTML
 
-Write `<stem>.review.html` beside the source (unless the user names another path).
+**Always regenerate** `<stem>.review.html` from the current Markdown on every seek-review run — never reuse, serve, or patch an existing review HTML.
+
+Write the new file beside the source (unless the user names another path).
 
 Embed config (`source`, `feedbackFileBase`, `submitUrl`) per [html-contract.md](html-contract.md).
 
 **Loyalty to structure:** keep source order, headings, and meaning; enhance with controls — do not reshuffle.
 
-**Chrome:** mimic [`reference/mindbridge-look-and-feel.html`](reference/mindbridge-look-and-feel.html); follow [html-contract.md](html-contract.md). Fix Mermaid syntax via [mermaid-compat.md](mermaid-compat.md). Persist drafts in `localStorage` keyed by source path.
+**Chrome (hard requirements — do not freestyle):**
+1. **Read** [`reference/mindbridge-look-and-feel.html`](reference/mindbridge-look-and-feel.html) before writing HTML.
+2. **Copy** its `<style>` block, topbar (MindBridge mark + Light/Dark + Comments), left sidebar shell, chat-bubble `comment-btn` (not pin / “+ Comment”), Mermaid viewport tools, comments drawer/modal, zoom modal, and form-anchored `fab-dock` Submit behavior into the review file. Follow [html-contract.md](html-contract.md).
+3. **Never invent a theme.** Forbidden: Fraunces, custom accent palettes (e.g. teal `#0d6e6e`), map-pin comments, marketing heroes, or any chrome not in the reference.
+4. Fix Mermaid via [mermaid-compat.md](mermaid-compat.md). Persist drafts in `localStorage` keyed by source path.
+5. Confirm the new file against the [compliance checklist](html-contract.md#compliance-checklist) before serving.
 
-**Done when:** HTML matches the reference patterns, Mermaid renders cleanly, Submit is form-anchored.
+**Done when:** a freshly written HTML passes the compliance checklist, Mermaid renders cleanly, and Submit is form-anchored.
 
 ### 5. Open in browser (background) and wait for feedback
 
