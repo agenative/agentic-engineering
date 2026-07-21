@@ -1,4 +1,4 @@
-# Document templates — design-a-feature
+# Document templates — deep-design
 
 Disclosed reference for [`SKILL.md`](SKILL.md). Load when writing or revising `RESEARCH.md` / `DESIGN.md`.
 

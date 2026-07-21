@@ -8,7 +8,7 @@ alwaysApply: true
 ## General Guidelines
 - When making technical decisions, do not give much weight to development cost. Always prefer quality, simplicity, consistency, robustness, scalability, security and long term maintainability.
 - Apply high standard to engineering excellence: lint, test failures, and test flakiness.
-- When asked to build new features, always start with the design-a-feature skill (research → design) before implementation.
+- Do not run deep-design for general feature requests. Use the deep-design skill only when the user explicitly asks to deep design a feature.
 
 ## Common Practice
 - Whenever you stop to ask for my confirmation, execute a terminal echo or system audio command first. 

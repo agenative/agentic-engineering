@@ -1,17 +1,24 @@
 ---
-name: design-a-feature
+name: deep-design
 description: >-
-  Design a feature through research gate then design gate (each via seek-review
-  on RESEARCH.md / DESIGN.md) until implementation-ready. Use when the user wants
-  to design-a-feature, produce RESEARCH.md/DESIGN.md, or iterate a design before
-  coding.
+  Deep-design a feature through research gate then design gate (each via seek-review
+  on RESEARCH.md / DESIGN.md) until implementation-ready. Use ONLY when the user
+  explicitly asks to deep design a feature (e.g. "deep design", "deep-design").
+  Do NOT use for general feature requests, building features, or starting
+  implementation without an explicit deep-design ask.
+disable-model-invocation: true
 ---
 
-# Design a feature
+# Deep design
 
 Turn initial thoughts into an **implementation-ready** `DESIGN.md` via *research
 stage* → *research gate* → *design stage* → *design gate*. Prefer monorepo
 primary sources and existing practices over invention.
+
+**When to use:** the user explicitly asks to **deep design** a feature (or names
+this skill). **When not to use:** general feature requests, "build X", bug fixes,
+refactors, or implementation work — proceed directly unless the user invokes
+deep design.
 
 **Leading words:** *research stage*, *research gate*, *design stage*, *design gate*, *review gate*, *seek-review*, *second thought*, *implementation-ready*.
 
