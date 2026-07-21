@@ -36,6 +36,17 @@ def check(html: str) -> list[str]:
     if html.count("</body>") != 1 or html.count("</html>") != 1:
         errs.append("duplicate or missing </body>/</html> close tags")
 
+    # Submit must POST feedback. Agent handlers are often truncated; serve_review.py
+    # injects a canonical runtime, but generated HTML should still include fetch().
+    if 'id="submitBtn"' in html or ">Submit review<" in html:
+        if "fetch(" not in html:
+            errs.append(
+                "Submit review handler missing fetch() — POST will no-op "
+                "(serve_review.py injects a runtime fix, but regenerate HTML with a real submit)"
+            )
+        if "location.origin" not in html and 'id="seek-review-config"' not in html:
+            errs.append("missing seek-review-config and location.origin submit resolution")
+
     # Pipe tables dumped into <pre> instead of <table>
     for pre in re.findall(r"<pre\b[^>]*>(.*?)</pre>", html, re.S | re.I):
         if re.search(r"^\|.+\|\s*$", pre, re.M) and re.search(r"^\|\s*[-:| ]+\|", pre, re.M):
