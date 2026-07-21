@@ -34,6 +34,26 @@ Typography: **DM Sans**; monospace for paths/code. Light / Dark toggle only (no 
 }
 ```
 
+`submitUrl` is a hint only. **Submit must POST to the server that served the page.**
+
+`serve_review.py` **always injects** [`scripts/submit_runtime.js`](scripts/submit_runtime.js) before `</body>` when serving HTML. That runtime:
+
+- Resolves the POST URL as `location.origin + "/submit"` (survives port changes)
+- Collects comments, radios, checkboxes, textareas, and verdict generically
+- Uses a **capture-phase** click listener so broken/truncated agent `onclick` handlers cannot swallow Submit
+
+Generated HTML should still include a working `fetch(...)` submit for assert/`file://` fallbacks:
+
+```js
+function resolveSubmitUrl(cfg) {
+  if (location.protocol === "http:" || location.protocol === "https:") {
+    return location.origin + "/submit";
+  }
+  return cfg.submitUrl; // file:// fallback
+}
+await fetch(resolveSubmitUrl(CFG), { method: "POST", ... });
+```
+
 Server allocates a unique `feedback_file` per submit from `feedbackFileBase`.
 
 ## Loyalty to structure
@@ -90,4 +110,4 @@ On click, set `active` immediately (short lock so scroll-spy does not leave the 
 }
 ```
 
-Sticky while scrolling; right edge of the **form column**; at the bottom of the form when the viewport is taller than the form. On submit: self-contained JSON (`items` + `original_quote`), on-page preview, POST to `submitUrl` (Copy/Download fallback).
+Sticky while scrolling; right edge of the **form column**; at the bottom of the form when the viewport is taller than the form. On submit: self-contained JSON (`items` + `original_quote`), on-page preview, POST to `resolveSubmitUrl(CFG)` (same-origin `/submit` when served; Copy/Download fallback).

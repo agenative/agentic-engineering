@@ -51,7 +51,7 @@ After writing it, run `python <skill>/scripts/assert_review_html.py <abs-path-to
 
 Write `<stem>.review.html` beside the source (unless the user names another path).
 
-Embed config (`source`, `feedbackFileBase`, `submitUrl`) per [html-contract.md](html-contract.md).
+Embed config (`source`, `feedbackFileBase`, `submitUrl`) per [html-contract.md](html-contract.md). Submit JS must `fetch(location.origin + "/submit")` when served over http(s). **`serve_review.py` always injects a canonical submit runtime** so truncated agent handlers and port changes cannot break **Submit review**.
 
 **Loyalty to structure:** keep source order, headings, and meaning; enhance with controls — do not reshuffle.
 
@@ -69,8 +69,12 @@ python <skill>/scripts/serve_review.py \
 ```
 
 - `<skill>` = this skill directory. `--out` is a **base name**; each submit writes `<stem>.review.feedback.<UTC-YYYYMMDD-HHMMSSZ>.<8hex>.json`.
-- Start in a **background terminal**. Wait for `FEEDBACK_WRITTEN=<unique-path>`; read **that** file.
-- If the server cannot start: open HTML directly; still save feedback under a unique timestamped name beside the source.
+- Do **not** pass `--no-open` unless you will open the URL yourself in the next step.
+- Start the server in a **background** shell (`block_until_ms: 0`).
+- Immediately await `SEEK_REVIEW_SERVER url=` (then optionally `BROWSER_OPENED=`). Parse the URL from that line.
+- **Browser must actually open.** If you see `BROWSER_OPEN_FAILED=` or no `BROWSER_OPENED=` within ~2s after `SEEK_REVIEW_SERVER`, open it from a **foreground** shell (macOS: `open "<url>"`; Linux: `xdg-open "<url>"`). Do not tell the user the review is live until the page has been requested or the OS open command succeeded.
+- Tell the user the review URL, then await `FEEDBACK_WRITTEN=<unique-path>`; read **that** file.
+- If the server cannot start: open the HTML file directly with the OS opener; still save feedback under a unique timestamped name beside the source.
 
 **Done when:** the new feedback file exists and has been read.
 
@@ -124,4 +128,6 @@ Omit empty freeform. Keep `items` as the primary reading path.
 - UI contract: [html-contract.md](html-contract.md)
 - Mermaid syntax: [mermaid-compat.md](mermaid-compat.md)
 - Review server: [scripts/serve_review.py](scripts/serve_review.py)
+- Submit runtime (injected on serve): [scripts/submit_runtime.js](scripts/submit_runtime.js)
+- Submit smoke test: [scripts/test_submit_integration.py](scripts/test_submit_integration.py)
 - HTML assert: [scripts/assert_review_html.py](scripts/assert_review_html.py)
