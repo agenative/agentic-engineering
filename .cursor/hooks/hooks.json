@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "sessionEnd": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "beforeSubmitPrompt": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "afterAgentThought": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "afterAgentResponse": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "postToolUseFailure": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "beforeMCPExecution": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "afterMCPExecution": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "beforeReadFile": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "afterFileEdit": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "beforeTabFileRead": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "afterTabFileEdit": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "preCompact": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "subagentStart": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "subagentStop": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ],
+    "stop": [
+      {
+        "command": "./hooks/mlflow_trace.py"
+      }
+    ]
+  }
+}

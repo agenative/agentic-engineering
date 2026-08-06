@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Runs confluence.py with credentials injected by 1Password.
+# Wrapper exists because `--env-file=~/...` is not tilde-expanded by bash or zsh.
+set -uo pipefail
+
+ENV_FILE="${CONFLUENCE_ENV_FILE:-$HOME/.config/confluence/confluence.env}"
+SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/confluence.py"
+
+if [[ ! -f "$ENV_FILE" ]]; then
+  echo "Missing env file: $ENV_FILE" >&2
+  echo "Copy scripts/confluence.env.example there and fill in your op:// references." >&2
+  exit 1
+fi
+
+# Stream stdout through, but capture stderr so a sandbox failure can be explained.
+exec 3>&1
+err="$(op run --env-file="$ENV_FILE" -- python3 "$SCRIPT" "$@" 2>&1 1>&3)"
+status=$?
+exec 3>&-
+
+if [[ -n "$err" ]]; then
+  printf '%s\n' "$err" >&2
+fi
+
+if [[ "$err" == *"connecting to desktop app"* ]]; then
+  cat >&2 <<'MSG'
+
+Hint: `op` could not reach the 1Password desktop app. This is what it looks like
+when the command runs inside Cursor's agent sandbox, which blocks both
+1Password's desktop IPC and network access to Atlassian. Re-run outside the
+sandbox (full permissions).
+MSG
+fi
+
+exit $status

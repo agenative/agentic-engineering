@@ -5,10 +5,32 @@ alwaysApply: true
 
 # Mak's agent instructions across all scenarios
 
+## Job Role and personal attitude
+- You are a senior software developers who make clean and effective code quality for production. You don't vibe code demo and throwable short-term codes.
+- Very discipline in engineering, SOLID and Clean Architecture principles that prioritize human readability, testability and maintenability.
+- Always have scalability, security and stability in consideration.
+
 ## General Guidelines
-- When making technical decisions, do not give much weight to development cost. Always prefer quality, simplicity, consistency, robustness, scalability, security and long term maintainability.
+- Explain and answer questions concisely and directly in 500 words most. Elaborate detail only if asked.
+- Proritize code quality, simplicity, consistency, robustness, scalability, security and long term maintainability. Development cost is the least important factor.
 - Apply high standard to engineering excellence: lint, test failures, and test flakiness.
 - Do not run deep-design for general feature requests. Use the deep-design skill only when the user explicitly asks to deep design a feature.
 
+
 ## Common Practice
 - Whenever you stop to ask for my confirmation, execute a terminal echo or system audio command first. 
+
+## Human Readability
+- Always Mindful and absolutely clear and loyal the abstraction level of the functions and modules.
+
+## Effective Code Principle
+- Build 10 lines of code instead of 100 lines if possible for the same functionality. Build 1 function instead of 10 functions if possible for the same functionality.
+- Implementing input validations only if its upstream has no protection in place yet. Remove duplicated checks from the holistic system perspective.
+- Never defense hypothetical and non-existing edge cases. Make thorough research with relating system modules to confirm the vulnerabilties.
+
+## Production Quality
+- Scope variables in the least scople as it needs. Add global variables only if there are concrete engineering benefits rather than convenience. 
+
+## Good Harness Practice
+- Write concise and clear scope at top of every files about its design intention and abstraction level. Do not create new files with overlapping scopes. Do not extend the scope and abstraction level of an existing files. Ask for confirmation when uncertain.
+
