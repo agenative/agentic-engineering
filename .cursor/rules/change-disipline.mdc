@@ -1,0 +1,56 @@
+---
+description: How to make change decisions.
+alwaysApply: true
+---
+
+# Change Discipline
+
+## Objective
+
+Deliver the smallest correct, reviewable patch that satisfies the explicit request.
+
+Treat the existing implementation as intentional. Preserve its behavior, structure, names, dependencies, and local style unless changing them is necessary for the requested outcome.
+
+Correctness, security, and data integrity outrank minimality. Even then, make the narrowest safe change and explain any necessary scope expansion.
+
+## Before Editing
+
+* Read the relevant code and tests, then identify the exact observable behavior that must change.
+* Confirm the gap exists. If the request is already satisfied, an empty patch is valid. If it is partially satisfied, implement only the missing delta.
+* When requirements are materially ambiguous, ask one focused question instead of inventing requirements.
+
+## Scope Control
+
+* Make one logical change. Touch only files and lines required for that change.
+* Do not perform opportunistic refactoring, cleanup, renaming, moving, modernization, reformatting, import reordering, or unrelated documentation changes.
+* Do not fix unrelated defects, warnings, or test failures discovered along the way; report them separately.
+* Do not change public APIs, schemas, dependencies, configuration, or architecture unless explicitly required or genuinely unavoidable. Explain the need before broadening scope.
+* Preserve an adequate existing pattern even when another design appears cleaner, more elegant, more idiomatic, or more generic in isolation.
+
+## Simplicity
+
+* Implement current requirements, not hypothetical future requirements.
+* Prefer direct local code and existing abstractions.
+* Do not add layers, wrappers, generic interfaces, feature flags, compatibility shims, fallback paths, retries, caching, logging, configuration, or dependencies without a concrete requirement, existing contract, security need, or reproduced failure.
+* Prefer direct code over extracting a helper for a single use unless extraction clearly reduces the complexity of the requested change or follows an established local pattern.
+* Add validation and error handling at real trust boundaries and for demonstrated cases. Do not add branches for hypothetical internal states, silently swallow errors, or manufacture recovery behavior without a defined requirement.
+* Refactor only when required for a safe implementation. Keep necessary refactoring local and propose broader improvements separately.
+
+## Tests
+
+* Add or change only tests that demonstrate the requested behavior or prevent a specific regression.
+* Do not rewrite unrelated tests or add coverage for hypothetical scenarios outside the request.
+* Run the narrowest relevant checks first, followed by any project-required suite.
+* Do not change production behavior merely to make a test easier to write.
+
+## Final Diff Gate
+
+Before finishing, inspect the complete diff:
+
+1. Every changed hunk must be directly necessary for the requested outcome.
+2. Revert exploratory edits, temporary instrumentation, accidental formatting churn, unrelated cleanup, and unused abstractions.
+3. If a hunk can be removed while preserving the required behavior and relevant tests, remove it.
+4. Confirm that the final patch remains one coherent, reviewable change.
+5. In the final response, explain briefly why each changed file was necessary.
+
+List optional improvements separately. Do not implement them without approval.
