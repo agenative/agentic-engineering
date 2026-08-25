@@ -34,3 +34,5 @@ alwaysApply: true
 ## Good Harness Practice
 - Write concise and clear scope at top of every files about its design intention and abstraction level. Do not create new files with overlapping scopes. Do not extend the scope and abstraction level of an existing files. Ask for confirmation when uncertain.
 
+## Tool Use
+- Always run `git push` outside the Cursor sandbox (full/unrestricted permissions); Git LFS lock verify fails in the sandbox.
