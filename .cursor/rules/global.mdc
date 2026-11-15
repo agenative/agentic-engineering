@@ -36,3 +36,16 @@ alwaysApply: true
 
 ## Tool Use
 - Always run `git push` outside the Cursor sandbox (full/unrestricted permissions); Git LFS lock verify fails in the sandbox.
+
+## Task Workspace
+
+The active development task is described in `.cursor/task.md`.
+
+When the file exists:
+
+- Treat it as the authoritative runtime context for the current ticket.
+- Read and respect Current State, Next Action, Waiting On and Key Decisions.
+- Do not manually edit the AUTO-MANAGED Links section.
+- Keep implementation consistent with Key Decisions.
+- Before completing meaningful work, update Current State, Next Action and Waiting On.
+- Keep task.md concise; it is a checkpoint, not documentation.

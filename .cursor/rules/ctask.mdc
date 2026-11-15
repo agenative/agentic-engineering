@@ -1,0 +1,17 @@
+---
+description: Use the active ctask ticket workspace context when .cursor/task.md exists
+alwaysApply: true
+---
+# Ticket Workspace
+
+When `.cursor/task.md` exists in the active workspace:
+
+- Treat it as the authoritative runtime context for the current ticket.
+- Read and respect Current State, Next Action, Waiting On, and Key Decisions.
+- Never manually modify anything between `AUTO-LINKS:START` and `AUTO-LINKS:END`; ctask owns that block.
+- Keep implementation consistent with Key Decisions unless the user explicitly changes them.
+- Before completing meaningful work, keep Current State, Next Action, and Waiting On accurate and concise.
+- Update Key Decisions only for durable decisions future conversations must know.
+- `.cursor/task.md` is a checkpoint, not long-form documentation.
+
+If `.cursor/task.md` does not exist, ignore this workflow.

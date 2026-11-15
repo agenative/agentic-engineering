@@ -1,0 +1,6 @@
+{
+  "jira_base_url": "https://mindbridge-ai.atlassian.net",
+  "ticket_regex": "([A-Z][A-Z0-9]+-[0-9]+)",
+  "default_branch_prefix": "feature",
+  "worktree_parent": "../{repo}-worktrees"
+}

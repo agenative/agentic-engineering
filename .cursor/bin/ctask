@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+exec python3 /Users/jeffreymak/git/agentic-engineering/.cursor/ticket-workspace/ctask.py "$@"

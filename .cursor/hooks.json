@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "hooks": {
+    "workspaceOpen": [
+      {
+        "command": "python3 /Users/jeffreymak/git/agentic-engineering/.cursor/ticket-workspace/ctask.py hook"
+      }
+    ],
+    "sessionStart": [
+      {
+        "command": "python3 /Users/jeffreymak/git/agentic-engineering/.cursor/ticket-workspace/ctask.py hook"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "python3 /Users/jeffreymak/git/agentic-engineering/.cursor/ticket-workspace/ctask.py hook",
+        "matcher": "gh pr (create|edit|merge)|git (push|switch|checkout)"
+      }
+    ],
+    "stop": [
+      {
+        "command": "python3 /Users/jeffreymak/git/agentic-engineering/.cursor/ticket-workspace/ctask.py hook",
+        "loop_limit": 1
+      }
+    ]
+  }
+}

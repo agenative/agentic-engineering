@@ -1,0 +1,99 @@
+# ADA end-to-end browser cases.
+#
+# source:      path relative to the monorepo root. A .parquet is uploaded as is (after transforms);
+#              a .csv is converted to parquet (ISO date columns become DATE unless infer_dates: false).
+# transforms:  applied in order by make_parquet.py:
+#                head: N                      keep the first N rows
+#                zero_rows: true              keep the schema, drop every row
+#                rename: {old: new}           rename headers (exercise ParquetSchemaColumnMapper)
+#                decimal: {columns: [..], precision: 18, scale: 2}   cast to parquet DECIMAL
+#                boolean_column: {name: x, from: col}  add a BOOLEAN column (true when col > median)
+#                format: not_parquet          upload the raw CSV bytes under a .csv name
+#                format: empty                upload a zero-byte .parquet
+# prompt:      natural-language instruction typed into the prompt box.
+# expect:
+#   outcome:         completed | failed | ui_error
+#   control_points:  symbolic control-point families that must appear in the published configs
+#   error_contains:  substring that must appear in the UI alert (ui_error) or in the evidence (failed)
+#   provisional:     true when the outcome was derived from code and not yet confirmed by a run
+#
+# Success cases reuse agent-services/mb_agents/evals/analysis_designer_agent/end_to_end/golden.yaml
+# inputs. Only control-point families ADA reliably produces on the publish path are required here.
+# After the signal-catalog removal, export maps gadget_*/sklearn_* plans through ALGORITHM_MAP;
+# sfa_unusual_amount / journal_entry_duplicate_v2 / sfa_groupby_z_score are optional LLM choices,
+# not reliable. Prefer families seen consistently on completed local runs.
+
+cases:
+  - id: revenue-periodic
+    source: agent-services/mb_agents/evals/analysis_designer_agent/end_to_end/cases/revenue-periodic/input.csv
+    prompt: >-
+      This is our revenue invoice data for the period. Design an analysis that flags unusual
+      invoice amounts and quantities by customer, product and region, bursts of activity, and
+      duplicate invoices.
+    expect:
+      outcome: completed
+      control_points: [sfa_isolation_forest, sfa_z_score]
+
+  - id: sap-ap
+    source: agent-services/mb_agents/evals/analysis_designer_agent/end_to_end/cases/sap-ap/input.csv
+    prompt: >-
+      SAP accounts payable open items export. Find vendors whose payment amounts are unusual
+      compared to their peers, and rare combinations of vendor, GL account and user.
+    expect:
+      outcome: completed
+      control_points: [sfa_isolation_forest, sfa_z_score]
+
+  - id: revenue-erp-renamed
+    source: agent-services/mb_agents/evals/analysis_designer_agent/end_to_end/cases/revenue-erp-renamed/input.csv
+    prompt: >-
+      ERP revenue export with our own column names. Build a revenue analysis that catches
+      unusual net revenue by client and SKU and duplicate invoice lines.
+    expect:
+      outcome: completed
+      control_points: [sfa_isolation_forest, sfa_z_score]
+
+  - id: column-names-and-types
+    source: agent-services/mb_agents/evals/analysis_designer_agent/end_to_end/cases/revenue-periodic/input.csv
+    transforms:
+      - rename:
+          invoice: "Invoice #"
+          product: "1st Product Code"
+          customer: "order"
+          region: "Region / Territory"
+          product_description: "product description that is deliberately much longer than sixty three characters"
+      - decimal: {columns: [amount, unit_price], precision: 18, scale: 2}
+      - boolean_column: {name: is_large_order, from: quantity}
+    prompt: >-
+      Revenue invoices with messy headers and decimal amounts. Design an analysis that flags
+      unusual amounts by customer and product, and duplicate invoices.
+    expect:
+      outcome: completed
+      control_points: [sfa_isolation_forest, sfa_z_score]
+
+  - id: not-parquet-file
+    source: agent-services/mb_agents/evals/analysis_designer_agent/end_to_end/cases/revenue-periodic/input.csv
+    transforms:
+      - format: not_parquet
+    prompt: Design an analysis for this file.
+    expect:
+      outcome: ui_error
+      error_contains: Please select a .parquet file.
+
+  - id: empty-file
+    source: agent-services/mb_agents/evals/analysis_designer_agent/end_to_end/cases/revenue-periodic/input.csv
+    transforms:
+      - format: empty
+    prompt: Design an analysis for this file.
+    expect:
+      outcome: ui_error
+      error_contains: The selected file is empty.
+
+  - id: header-only-parquet
+    source: agent-services/mb_agents/evals/analysis_designer_agent/end_to_end/cases/revenue-periodic/input.csv
+    transforms:
+      - zero_rows: true
+    prompt: >-
+      Revenue invoices. Design an analysis that flags unusual amounts by customer.
+    expect:
+      outcome: failed
+      provisional: true
